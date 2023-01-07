@@ -42,14 +42,11 @@ brand_table <- table(shoes$brand) %>%
 sapply(shoes, function(x) sum(is.na(x)))
 ```
 
+
 ```{r}
-# generate a nice looking table with a list of all brands that have at least 100 pairs of shoes in the data set
-brand_table %>%
-  filter(Freq >= 100) %>%
-  kable()
+
 
 ```
-
 
 # Analysis
 
@@ -74,6 +71,17 @@ Here are some key columns from the data set:
 - prices.amountMin: The lowest price listed online for this brand and model of shoe. No missing data. The values in this column range from 4.88 - 359.99, with a mean of 51.13. 
 - prices.isSale: This column indicates whether an item was on sale at the time its price was recorded. This data is present for all rows in the data set. 
 
+The most common brands in this data set are represented in the table below, with the frequency being the number of different shoe models of each brand. 
+
+```{r, echo = FALSE}
+
+# generate a nice looking table with a list of all brands that have at least 100 pairs of shoes in the data set
+brand_table %>%
+  filter(Freq >= 100) %>%
+  kable()
+
+```
+
 
 ## Research Question & Motivation
 
@@ -84,7 +92,7 @@ These questions would be useful for a potential purchaser of women's shoes. But 
 
 ## Findings
 
-1. 
+1. The average price of women's shoes is 
 2.
 3.
 

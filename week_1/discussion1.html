@@ -1637,11 +1637,37 @@ display: none;
 <div id="code" class="section level1">
 <h1>Code</h1>
 <pre class="r"><code># read in data
-shoes &lt;- read.csv(&#39;shoes.csv&#39;)
+shoes &lt;- read.csv(&#39;shoes.csv&#39;, na.strings=c(&#39;&#39;))
+
+# convert date columns to date format
+shoes$dateAdded &lt;- as.POSIXlt(shoes$dateAdded, 
+                              tz = &quot;UTC&quot;, 
+                              tryFormats = c(&quot;%Y-%m-%dT%H:%M:%SZ&quot;), 
+                              optional = FALSE)
+shoes$dateUpdated &lt;- as.POSIXlt(shoes$dateUpdated, 
+                              tz = &quot;UTC&quot;, 
+                              tryFormats = c(&quot;%Y-%m-%dT%H:%M:%SZ&quot;), 
+                              optional = FALSE)
 
 # **TECHNIQUE #1 FROM THE WEEK&#39;S MATERIAL: summarize data**
 summary(shoes)</code></pre>
-<pre><code>##       id             dateAdded         dateUpdated           asins          
+<pre><code>##       id              dateAdded                     
+##  Length:10000       Min.   :2015-05-04 12:13:08.00  
+##  Class :character   1st Qu.:2017-11-10 19:32:55.00  
+##  Mode  :character   Median :2017-11-15 02:33:41.00  
+##                     Mean   :2017-10-15 17:25:59.84  
+##                     3rd Qu.:2017-11-17 14:45:41.00  
+##                     Max.   :2018-05-21 13:17:40.00  
+##                                                     
+##   dateUpdated                        asins              brand          
+##  Min.   :2018-01-01 05:51:15.00   Length:10000       Length:10000      
+##  1st Qu.:2018-01-28 14:59:44.00   Class :character   Class :character  
+##  Median :2018-02-01 07:34:05.00   Mode  :character   Mode  :character  
+##  Mean   :2018-02-03 17:07:50.00                                        
+##  3rd Qu.:2018-02-01 07:36:14.00                                        
+##  Max.   :2018-10-23 21:26:11.00                                        
+##                                                                        
+##   categories        primaryCategories     colors           dimension        
 ##  Length:10000       Length:10000       Length:10000       Length:10000      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
@@ -1649,7 +1675,47 @@ summary(shoes)</code></pre>
 ##                                                                             
 ##                                                                             
 ##                                                                             
-##     brand            categories        primaryCategories     colors         
+##       ean             imageURLs             keys           manufacturer      
+##  Min.   :3.398e+10   Length:10000       Length:10000       Length:10000      
+##  1st Qu.:7.280e+11   Class :character   Class :character   Class :character  
+##  Median :8.700e+11   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :7.715e+11                                                           
+##  3rd Qu.:8.860e+11                                                           
+##  Max.   :8.900e+11                                                           
+##  NA&#39;s   :9329                                                                
+##  manufacturerNumber     name           prices.amountMax prices.amountMin
+##  Length:10000       Length:10000       Min.   :  5.87   Min.   :  4.88  
+##  Class :character   Class :character   1st Qu.: 59.99   1st Qu.: 37.49  
+##  Mode  :character   Mode  :character   Median : 64.99   Median : 49.99  
+##                                        Mean   : 69.22   Mean   : 51.13  
+##                                        3rd Qu.: 79.99   3rd Qu.: 59.99  
+##                                        Max.   :359.95   Max.   :359.95  
+##                                                                         
+##  prices.availability prices.color       prices.condition   prices.currency   
+##  Length:10000        Length:10000       Length:10000       Length:10000      
+##  Class :character    Class :character   Class :character   Class :character  
+##  Mode  :character    Mode  :character   Mode  :character   Mode  :character  
+##                                                                              
+##                                                                              
+##                                                                              
+##                                                                              
+##  prices.dateAdded   prices.dateSeen    prices.isSale   prices.merchant   
+##  Length:10000       Length:10000       Mode :logical   Length:10000      
+##  Class :character   Class :character   FALSE:9830      Class :character  
+##  Mode  :character   Mode  :character   TRUE :170       Mode  :character  
+##                                                                          
+##                                                                          
+##                                                                          
+##                                                                          
+##  prices.offer       prices.returnPolicy prices.shipping    prices.size       
+##  Length:10000       Mode:logical        Length:10000       Length:10000      
+##  Class :character   NA&#39;s:10000          Class :character   Class :character  
+##  Mode  :character                       Mode  :character   Mode  :character  
+##                                                                              
+##                                                                              
+##                                                                              
+##                                                                              
+##  prices.sourceURLs     sizes            sourceURLs            upc           
 ##  Length:10000       Length:10000       Length:10000       Length:10000      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
@@ -1657,71 +1723,80 @@ summary(shoes)</code></pre>
 ##                                                                             
 ##                                                                             
 ##                                                                             
-##   dimension              ean             imageURLs             keys          
-##  Length:10000       Min.   :3.398e+10   Length:10000       Length:10000      
-##  Class :character   1st Qu.:7.280e+11   Class :character   Class :character  
-##  Mode  :character   Median :8.700e+11   Mode  :character   Mode  :character  
-##                     Mean   :7.715e+11                                        
-##                     3rd Qu.:8.860e+11                                        
-##                     Max.   :8.900e+11                                        
-##                     NA&#39;s   :9329                                             
-##  manufacturer       manufacturerNumber     name           prices.amountMax
-##  Length:10000       Length:10000       Length:10000       Min.   :  5.87  
-##  Class :character   Class :character   Class :character   1st Qu.: 59.99  
-##  Mode  :character   Mode  :character   Mode  :character   Median : 64.99  
-##                                                           Mean   : 69.22  
-##                                                           3rd Qu.: 79.99  
-##                                                           Max.   :359.95  
-##                                                                           
-##  prices.amountMin prices.availability prices.color       prices.condition  
-##  Min.   :  4.88   Length:10000        Length:10000       Length:10000      
-##  1st Qu.: 37.49   Class :character    Class :character   Class :character  
-##  Median : 49.99   Mode  :character    Mode  :character   Mode  :character  
-##  Mean   : 51.13                                                            
-##  3rd Qu.: 59.99                                                            
-##  Max.   :359.95                                                            
-##                                                                            
-##  prices.currency    prices.dateAdded   prices.dateSeen    prices.isSale  
-##  Length:10000       Length:10000       Length:10000       Mode :logical  
-##  Class :character   Class :character   Class :character   FALSE:9830     
-##  Mode  :character   Mode  :character   Mode  :character   TRUE :170      
-##                                                                          
-##                                                                          
-##                                                                          
-##                                                                          
-##  prices.merchant    prices.offer       prices.returnPolicy prices.shipping   
-##  Length:10000       Length:10000       Mode:logical        Length:10000      
-##  Class :character   Class :character   NA&#39;s:10000          Class :character  
-##  Mode  :character   Mode  :character                       Mode  :character  
-##                                                                              
-##                                                                              
-##                                                                              
-##                                                                              
-##  prices.size        prices.sourceURLs     sizes            sourceURLs       
-##  Length:10000       Length:10000       Length:10000       Length:10000      
-##  Class :character   Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-##                                                                             
-##                                                                             
-##                                                                             
-##                                                                             
-##      upc               weight         
-##  Length:10000       Length:10000      
-##  Class :character   Class :character  
-##  Mode  :character   Mode  :character  
-##                                       
-##                                       
-##                                       
+##     weight         
+##  Length:10000      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+##                    
 ## </code></pre>
 <pre class="r"><code># **TECHNIQUE #2 FROM THE WEEK&#39;S MATERIAL: count up the number of shoes per brand**
 # then save table as a dataframe
 brand_table &lt;- table(shoes$brand) %&gt;%
   as.data.frame()
 
-# generate a nice looking table with a list of all brands that have at least 100 pairs of shoes in the data set
-brand_table %&gt;%
-  filter(Freq &gt;= 100) %&gt;%
-  kable()</code></pre>
+# count number of NAs in each column
+sapply(shoes, function(x) sum(is.na(x)))</code></pre>
+<pre><code>##                  id           dateAdded         dateUpdated               asins 
+##                   0                   0                   0                9997 
+##               brand          categories   primaryCategories              colors 
+##                   0                   0                   0                7369 
+##           dimension                 ean           imageURLs                keys 
+##                9883                9329                   0                   0 
+##        manufacturer  manufacturerNumber                name    prices.amountMax 
+##                9473                7518                   0                   0 
+##    prices.amountMin prices.availability        prices.color    prices.condition 
+##                   0                9566                   0                9562 
+##     prices.currency    prices.dateAdded     prices.dateSeen       prices.isSale 
+##                   0                 777                   0                   0 
+##     prices.merchant        prices.offer prices.returnPolicy     prices.shipping 
+##                9565                9879               10000                9588 
+##         prices.size   prices.sourceURLs               sizes          sourceURLs 
+##                   0                   0                   0                   0 
+##                 upc              weight 
+##                 360                9701</code></pre>
+</div>
+<div id="analysis" class="section level1">
+<h1>Analysis</h1>
+<div id="links" class="section level2">
+<h2>Links</h2>
+<p>Github Link: Data Source Link: <a href="https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices" class="uri">https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices</a></p>
+</div>
+<div id="description-of-data" class="section level2">
+<h2>Description of Data</h2>
+<p>This data set contains information on women’s shoes, including their
+brand, manufacturer, color, and price. The data was scrapped from online
+shopping platforms by the company Datafiniti. It was originally uploaded
+in 2019 based on data collected from online shopping platforms between
+2015 - 2018. There are 10,000 observations in this data set, each
+representing a particular shoe brand, model, and retailer
+combination.</p>
+<p>Here are some key columns from the data set: - id: A unique id for
+each observation. No missing values. - dateAdded: Date the listing was
+first added to the data set. No missing values. The earliest date is
+2015-05-04 and the most recent date is 2018-05-21. The median date was
+2017-11-15. - dateUpdated: Date the brand listing was most recently
+updated. No missing values. The earliest date is 2018-01-01 and the most
+recent date is 2018-10-23. The median date was 2018-02-01. - brand: A
+string listing the name of the brand of the shoes. No missing values. -
+colors: A string listing the colors available for each pair of shoes.
+Only about a quarter of rows have color information listed. 7,369 rows
+are missing color information. - manufacturer: This is the manufacturer
+of the shoe, if different from the brand. Most rows (9,473) have this
+field empty, indicating the brand and manufacturer are the same. - name:
+A string listing the name of the shoe model. No missing values. -
+prices.amountMax: The highest price listed online for this brand and
+model of shoe. No missing data. The the values in this column range from
+5.87 - 359.99, with a mean of 69.22. - prices.amountMin: The lowest
+price listed online for this brand and model of shoe. No missing data.
+The values in this column range from 4.88 - 359.99, with a mean of
+51.13. - prices.isSale: This column indicates whether an item was on
+sale at the time its price was recorded. This data is present for all
+rows in the data set.</p>
+<p>The most common brands in this data set are represented in the table
+below, with the frequency being the number of different shoe models of
+each brand.</p>
 <table>
 <thead>
 <tr>
@@ -1905,43 +1980,25 @@ style charles by charles david
 </tbody>
 </table>
 </div>
-<div id="analysis" class="section level1">
-<h1>Analysis</h1>
-<div id="links" class="section level2">
-<h2>Links</h2>
-<p>Github Link: Data Source Link: <a href="https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices" class="uri">https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices</a></p>
-</div>
-<div id="description-of-data" class="section level2">
-<h2>Description of Data</h2>
-<div id="background-on-data" class="section level3">
-<h3>Background on Data</h3>
-<p>This data set contains information on backpacks that are commonly
-used for hiking and other outdoor activities. The data was compiled by
-L. Farras Vijaya.</p>
-<ul>
-<li>how it was collected</li>
-<li>when it was collected</li>
-<li>who collected it</li>
-</ul>
-<p>Description of data: - what information is contained in the data set
-- what columns it has</p>
-<p>Descriptive statistics: - how many observations there are - average,
-minimum, and maximum values</p>
-</div>
-</div>
 <div id="research-question-motivation" class="section level2">
 <h2>Research Question &amp; Motivation</h2>
-<ul>
-<li>Explain what you are trying to find out from this data</li>
-<li>Motivation: Explain why we should care about this analysis and how
-it might be used in a practical setting (e.g. how would a business use
-this analysis to make decisions)</li>
-</ul>
+<p>We’re interested in assessing what the average price of women’s shoes
+are, how much the price of a pair of shoes varies between its highest
+and lowest listed prices, and whether shoes are actually cheaper on
+sale. It is possible that expensive shoes may be the ones that tend to
+go on sale more often, meaning shoes on sale could be more expensive
+than shoes not on sale. Or, conventional wisdom could hold true and sale
+shoes could be cheaper.</p>
+<p>These questions would be useful for a potential purchaser of women’s
+shoes. But this information could also be helpful if you were working
+for a shoe business - knowing information abut how competitors price
+their shoes could help you to price your shoes competitively with the
+marketplace.</p>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
 <ol style="list-style-type: decimal">
-<li></li>
+<li>The average price of women’s shoes is</li>
 <li></li>
 <li></li>
 </ol>
