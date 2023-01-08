@@ -1,0 +1,119 @@
+---
+title: "discussion3"
+author: "Michelle Vered"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Code
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+```
+
+```{r}
+# read in data
+cereal <- read.csv('cereal.csv')
+
+# recode -1 to NA values
+cereal <- cereal %>%
+  mutate(carbo = ifelse(carbo < 0, NA, carbo)) %>%
+  mutate(sugars = ifelse(sugars < 0, NA, sugars)) %>%
+  mutate(potass = ifelse(potass < 0, NA, potass))
+
+# summarize data
+summary(cereal)
+```
+
+# Analysis
+
+## Links
+
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_3>
+
+Data Source Link: <https://www.kaggle.com/datasets/crawford/80-cereals>
+
+## Background on Data Set
+
+The data includes information on breakfast cereals, including the name, manufacturer, and nutrition facts. The data was cleaned by Petra Isenberg, Pierre Dragicevic and Yvonne Jansen. The original source of the data they used was from the StatLib 1993 Statistical Graphics Exposition, where the Cereal data set was one of the data sets available to participants to use in creating data visualizations for the conference.
+
+## Research Question & Motivation
+
+It's useful to understand the nutrition facts of different cereals, both as a consumer of cereals and from the perspective of a cereal seller or manufacturer. From the perspective of a cereal consumer, you might be interested in understanding what kind of nutrition cereal provides - how much of the calories come from sugar versus complex carbohydrates, protein, fat, etc. How does the sugar content in cereals correlate to the calorie count? From a seller or marketplace perspective, are there certain cereal manufacturers that have different niches within the market? For example, do some producers tend towards creating sugary cereals while others mostly produce healthy cereals? Or do most brands tend to produce a mix of different types of cereals?
+
+## Data Description & Descriptive Statistics
+
+The data includes 77 observations, each one representing a different cereal brand and name. None of the rows or columns have missing data explicitly, but a few columns have negative values, which may indicate that the data is actually missing but coded as -1.
+
+The data set includes the following columns:
+
+-   name: The name of the cereal.
+
+-   mf: The manufacturer of the cereal, coded by letter.
+
+    -   A = American Home Food Products
+
+    -   G = General Mills
+
+    -   K = Kelloggs
+
+    -   N = Nabisco
+
+    -   P = Post
+
+    -   Q = Quaker Oats
+
+    -   R = Ralston Purina
+
+-   type: Whether the cereal is hot or cold.
+
+-   calories: The number of calories per serving. There is an average of 106.9 calories per serving, with a minimum of 50 and a maximum of 160 calories.
+
+-   protein: The protein per serving, in grams. There is an average of 2.545 grams, with a range of 1 to 6 grams.
+
+-   fat: The fat per serving, in grams. There is an average of 1.013 grams, with a range of 0 to 5 grams.
+
+-   sodium: Sodium per serving, in milligrams. There is an average of 159.7 milligrams, with a range of 0 to 320 milligrams.
+
+-   fiber: Dietary fiber per serving, in grams. There is an average of 2.152 grams, with a range of 0 to 14 grams.
+
+-   carbo: Complex carbohydrates per serving, in grams. **There are some rows with a value of -1, which may indicate missing data, since negative values for nutrition facts do not make sense.** If we drop the -1 values, the lowest value is 5 grams and the highest value is 23 grams. After dropping the one row coded as -1, the average value is 14.6 grams.
+
+-   sugars: Sugars per serving, in grams. This column also includes some values of -1 which may indicate missing data. After dropping the one row coded as -1, the average value is 6.922 grams, with a range of 0 to 15 grams.
+
+-   potass: Potassium per serving, in milligrams. This column also includes some -1 values which may indicate missing data. Dropping the two rows with -1 as their value, the average is 96.08 milligrams, with a range of 15 to 330 milligrams of potassium.
+
+-   vitamins: The percentage of the FDA recommended daily intake of vitamins and minerals that the cereal holds, per serving. Either 0, 25, or 100. The average was 28.25.
+
+-   shelf: The display shelf the cereal is placed on, counting from the floor up. The average was shelf number 2.208.
+
+-   weight: The weight of one serving, in ounces. The average was 1.03 oz, with a range of 0.5 to 1.5 oz.
+
+-   cups: The number of cups in one serving. The average was 0.821 cups, with a range of 0.25 to 1.5 cups.
+
+-   rating: A rating of the cereal, on a scale of 0-100, from Consumer Reports. The average rating was 42.67 with a range of 18.04 to 93.70 points.
+
+## Data Visualizations
+
+There is a generally positive relationship between sugar and calories - the higher the sugar content, the larger the number of calories in each serving.
+
+```{r, echo = FALSE}
+
+# visualization of sugar vs calorie count
+cereal %>%
+  drop_na() %>%
+  ggplot(aes(x = sugars, y = calories)) +
+  geom_point() +
+  labs(x = "Sugar per serving, in grams",
+       y = "Calories per serving",
+       title = "Sugar versus Calories")
+  
+```
+
+## Data Analysis
+
+## Findings
