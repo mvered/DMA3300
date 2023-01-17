@@ -41,7 +41,6 @@ brand_table <- table(shoes$brand) %>%
 sapply(shoes, function(x) sum(is.na(x)))
 ```
 
-
 ```{r}
 # create new column for difference in price (high price - low price)
 shoes <- shoes %>%
@@ -61,40 +60,51 @@ tapply(shoes$prices.amountMin, shoes$prices.isSale, summary)
 tapply(shoes$prices.amountMax, shoes$prices.isSale, summary)
 ```
 
-
 # Analysis
 
 ## Links
 
-Github Link: https://github.com/mvered/DMA3300/tree/main/week_1
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_1>
 
-Data Source Link: https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices
+Data Source Link: <https://www.kaggle.com/datasets/datafiniti/womens-shoes-prices>
 
 ## Description of Data
 
 ### Background on Data
 
-This data set contains information on women's shoes, including their brand, manufacturer, color, and price. The data was scrapped from online shopping platforms by the company Datafiniti. It was originally uploaded in 2019 based on data collected from online shopping platforms between 2015 - 2018. 
+This data set contains information on women's shoes, including their brand, manufacturer, color, and price. The data was scrapped from online shopping platforms by the company Datafiniti. It was originally uploaded in 2019 based on data collected from online shopping platforms between 2015 - 2018.
 
 ### Description of Data & Descriptive Statistics
 
-There are 10,000 observations in this data set, each representing a particular shoe brand, model, and retailer combination. 
+There are 10,000 observations in this data set, each representing a particular shoe brand, model, and retailer combination.
 
 Here are some key columns from the data set:
+
 <ul>
-<li> id: A unique id for each observation. No missing values. </li>
-<li> dateAdded: Date the listing was first added to the data set. No missing values. The earliest date is 2015-05-04 and the most recent date is 2018-05-21. The median date was 2017-11-15. </li>
-<li> dateUpdated: Date the brand listing was most recently updated. No missing values. The earliest date is 2018-01-01 and the most recent date is 2018-10-23. The median date was 2018-02-01. </li>
-<li> brand: A string listing the name of the brand of the shoes. No missing values. </li>
-<li> colors: A string listing the colors available for each pair of shoes. Only about a quarter of rows have color information listed. 7,369 rows are missing color information. </li>
-<li> manufacturer: This is the manufacturer of the shoe, if different from the brand. Most rows (9,473) have this field empty, indicating the brand and manufacturer are the same.  </li>
-<li> name: A string listing the name of the shoe model. No missing values. </li>
-<li> prices.amountMax: The highest price listed online for this brand and model of shoe. No missing data. The the values in this column range from 5.87 - 359.99, with a mean of 69.22. </li>
-<li> prices.amountMin: The lowest price listed online for this brand and model of shoe. No missing data. The values in this column range from 4.88 - 359.99, with a mean of 51.13.  </li>
-<li> prices.isSale: This column indicates whether an item was on sale at the time its price was recorded. This data is present for all rows in the data set. </li>
+
+<li>id: A unique id for each observation. No missing values.</li>
+
+<li>dateAdded: Date the listing was first added to the data set. No missing values. The earliest date is 2015-05-04 and the most recent date is 2018-05-21. The median date was 2017-11-15.</li>
+
+<li>dateUpdated: Date the brand listing was most recently updated. No missing values. The earliest date is 2018-01-01 and the most recent date is 2018-10-23. The median date was 2018-02-01.</li>
+
+<li>brand: A string listing the name of the brand of the shoes. No missing values.</li>
+
+<li>colors: A string listing the colors available for each pair of shoes. Only about a quarter of rows have color information listed. 7,369 rows are missing color information.</li>
+
+<li>manufacturer: This is the manufacturer of the shoe, if different from the brand. Most rows (9,473) have this field empty, indicating the brand and manufacturer are the same.</li>
+
+<li>name: A string listing the name of the shoe model. No missing values.</li>
+
+<li>prices.amountMax: The highest price listed online for this brand and model of shoe. No missing data. The the values in this column range from 5.87 - 359.99, with a mean of 69.22.</li>
+
+<li>prices.amountMin: The lowest price listed online for this brand and model of shoe. No missing data. The values in this column range from 4.88 - 359.99, with a mean of 51.13.</li>
+
+<li>prices.isSale: This column indicates whether an item was on sale at the time its price was recorded. This data is present for all rows in the data set.</li>
+
 </ul>
 
-The most common brands in this data set are represented in the table below, with the frequency being the number of different shoe models of each brand. 
+The most common brands in this data set are represented in the table below, with the frequency being the number of different shoe models of each brand.
 
 ```{r, echo = FALSE}
 
@@ -105,21 +115,16 @@ brand_table %>%
 
 ```
 
-
 ## Research Question & Motivation
 
 We're interested in assessing what the average price of women's shoes are, how much the price of a pair of shoes varies between its highest and lowest listed prices, and whether shoes are actually cheaper on sale. It is possible that expensive shoes may be the ones that tend to go on sale more often, meaning shoes on sale could be more expensive than shoes not on sale. Or, conventional wisdom could hold true and sale shoes could be cheaper.
 
 These questions would be useful for a potential purchaser of women's shoes. But this information could also be helpful if you were working for a shoe business - knowing information abut how competitors price their shoes could help you to price your shoes competitively with the marketplace.
 
-
 ## Findings
 
-1. The average low price of women's shoes is \$`r round(mean(shoes$prices.amountMin), 2)`. The average high price of women's shoes is \$`r round(mean(shoes$prices.amountMax), 2)`. 
+1.  The average low price of women's shoes is \$`r round(mean(shoes$prices.amountMin), 2)`. The average high price of women's shoes is \$`r round(mean(shoes$prices.amountMax), 2)`.
 
-2. The difference between high and low price (for the same pair of shoes), varies between no difference all the way to \$109.97 difference in price. The mean price difference is \$18.09 and the median price difference \$18.00.
+2.  The difference between high and low price (for the same pair of shoes), varies between no difference all the way to \$109.97 difference in price. The mean price difference is \$18.09 and the median price difference \$18.00. `r print('hello world')`
 
-3. The average minimum price for sale shoes is actually higher than for non-sale shoes (\$65.88 for sale shoes vs. \$50.88 for non-sale shoes). The average maximum price for sale shoes is also higher than for non-sale shoes (\$106.42 for sale shoes vs \$68.58 for non-sale shoes). So our hypothesis that more expensive shoes are more likely to go on sale is probably right. The conventional wisdom, that you should buy things when they're on sale, may be wrong in this case! Buying shoes just because they're on sale may mean you are buying shoes that are actually more expensive. For a shoe retailer looking at this data, it seems like competitors could be employig a strategy of making prices higher to begin with, then putting the shoes on sale. This might be a worthwhile tactic to try as a seller. 
-
-
-
+3.  The average minimum price for sale shoes is actually higher than for non-sale shoes (\$65.88 for sale shoes vs. \$50.88 for non-sale shoes). The average maximum price for sale shoes is also higher than for non-sale shoes (\$106.42 for sale shoes vs \$68.58 for non-sale shoes). So our hypothesis that more expensive shoes are more likely to go on sale is probably right. The conventional wisdom, that you should buy things when they're on sale, may be wrong in this case! Buying shoes just because they're on sale may mean you are buying shoes that are actually more expensive. For a shoe retailer looking at this data, it seems like competitors could be employig a strategy of making prices higher to begin with, then putting the shoes on sale. This might be a worthwhile tactic to try as a seller.

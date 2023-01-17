@@ -5,6 +5,8 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     df_print: paged
+  word_document: default
+  pdf_document: default
 ---
 
 # Code
@@ -19,7 +21,7 @@ library(kableExtra)
 # read in data
 cereal <- read.csv('cereal.csv')
 
-# recode -1 to NA values
+# TECHNIQUE #1:recode -1 values to NA
 cereal <- cereal %>%
   mutate(carbo = ifelse(carbo < 0, NA, carbo)) %>%
   mutate(sugars = ifelse(sugars < 0, NA, sugars)) %>%
@@ -43,7 +45,7 @@ The data includes information on breakfast cereals, including the name, manufact
 
 ## Research Question & Motivation
 
-It's useful to understand the nutrition facts of different cereals, both as a consumer of cereals and from the perspective of a cereal seller or manufacturer. From the perspective of a cereal consumer, you might be interested in understanding what kind of nutrition cereal provides - how much of the calories come from sugar versus complex carbohydrates, protein, fat, etc. How does the sugar content in cereals correlate to the calorie count? From a seller or marketplace perspective, are there certain cereal manufacturers that have different niches within the market? For example, do some producers tend towards creating sugary cereals while others mostly produce healthy cereals? Or do most brands tend to produce a mix of different types of cereals?
+It's useful to understand the nutrition facts of different cereals, both as a consumer of cereals and from the perspective of a cereal seller or manufacturer. From the perspective of a cereal consumer, you might be interested in understanding what kind of nutrition cereal provides - how does the sugar content in cereals correlate to the calorie count? From a seller or marketplace perspective, are there certain cereal manufacturers that have different niches within the market? For example, do some producers tend towards creating sugary cereals while others mostly produce lower-sugar cereals? Or do most brands tend to produce a mix of different types of cereals?
 
 ## Data Description & Descriptive Statistics
 
@@ -53,7 +55,7 @@ The data set includes the following columns:
 
 -   name: The name of the cereal.
 
--   mf: The manufacturer of the cereal, coded by letter.
+-   mfr: The manufacturer of the cereal, coded by letter.
 
     -   A = American Home Food Products
 
@@ -97,23 +99,60 @@ The data set includes the following columns:
 
 -   rating: A rating of the cereal, on a scale of 0-100, from Consumer Reports. The average rating was 42.67 with a range of 18.04 to 93.70 points.
 
-## Data Visualizations
+## Data Analysis & Visualizations
 
-There is a generally positive relationship between sugar and calories - the higher the sugar content, the larger the number of calories in each serving.
+There is a positive correlation between sugar and calories, as we can see from the scatterplot of those two variables. The higher the sugar content, the larger the number of calories in each serving, as we might expect. The cereals tend to exist on a continous spectrum of lower to higher sugar content and lower to higher calorie content, rather than being separated into distinct \"low\" and \"high\" groups. From this visualization, it\'s hard to make out any distinct patterns by manufacturer. Each manufacturer has cereals across the spectrum of sugar content and calorie content.
 
 ```{r, echo = FALSE}
 
 # visualization of sugar vs calorie count
 cereal %>%
   drop_na() %>%
-  ggplot(aes(x = sugars, y = calories)) +
+  ggplot(aes(x = sugars, y = calories, color = mfr)) +
   geom_point() +
   labs(x = "Sugar per serving, in grams",
        y = "Calories per serving",
-       title = "Sugar versus Calories")
-  
+       title = "Sugar versus Calories, by Manufacturer",
+       color = "Manufacturer")
 ```
 
-## Data Analysis
+We can also look at summary statistics for calorie content and sugar content, grouping cereals by manufacturer. Specifically, we'll look at the mean and standard deviation of calories and sugar.
+
+```{r, echo = FALSE}
+
+# TECHNIQUE #2: group by & summarize
+cereal %>%
+  drop_na() %>%
+  group_by(mfr) %>%
+  summarize(count_cereals = n(),
+            calories_mean = round(mean(calories),2),
+            calories_sd = round(sd(calories),2),
+            sugars_mean = round(mean(sugars),2),
+            sugars_sd = round(sd(sugars),2)
+            ) %>%
+  kbl() %>% # format table nicely
+  kable_classic(full_width = F) # choose style of table formatting
+```
+
+Before diving into caloric and sugar content, however, it's important to note that the number of cereals produced by a given manufacturer varies wildly. Manufacturer A (American Home Food Products) only produces 1 cereal, while at the upper end, Manufacturer K (Kellogs) produces 23 cereals. So some manufacturers have the opportunity for more variety just by virtue of having so many products, while other manufacturers are focusing on only a handful of product offerings.
+
+In terms of calories, the average caloric content for one serving of cereal is between 84.00 to 115.71 calories per serving. The standard deviation of calories, a measure of the variation from cereal to cereal, varies depending on the manufacturer. Some manufacturers produce cereals that are more similar to one another in caloric content, such as Manufacturer N (Nabisco) which has a standard deviation of 8.904, Manufacturer G (General Mills) with a standard deviation of 10.37 and Manufacturer P (Post) with a standard deviation of 10.54. The other manufacturers have a much greater variation in caloric content between their different cereals, with a standard deviation ranging from 22.22 to 31.55.
+
+In terms of sugar, the mean sugar content ranges from 2.20 to 8.78 grams per serving. The standard deviation of sugar content ranges from 3.03 to 4.78 grams. We can visualize the distribution of sugar content by manufacturer using a boxplot. From the boxplot, it's easy to see that Manufacturer N (Nabisco) has cereals that are far less sugary than their competitors. The other manufacturers are more similar to one another in that they have a wider range of values for sugar content. This indicates that these manufacturers are producing a variety of products, some with higher sugar content and some that are lower in sugar.
+
+```{r, echo = FALSE}
+
+cereal %>%
+  drop_na() %>%
+  ggplot(aes(x = mfr, y = sugars)) +
+  geom_boxplot() +
+  labs(x = "Manufacturer Code",
+       y = "Sugar per Serving, in Grams",
+       title = "Boxplot of Cereal Sugar Content by Manufacturer")
+```
 
 ## Findings
+
+1.  Higher amounts of sugar in a cereal is associated with a higher calorie content. We can see this from the scatterplot of sugar content vs calories per serving.
+2.  Some manufacturers make cereals that are similar to one another in terms of calorie count per serving, while other manufacturers make more of a variety of cereals. We can see this by looking at the standard deviation of sugar content, grouped by manufacturer.
+3.  One manufacturer, Nabisco, makes most of its cereals at a lower sugar content. One manufacturer, American Home Food Products, makes only 1 cereal, so it's hard to draw conclusions about their decisions around sugar content of their products. The rest of the manufacturers produce a variety of cereals, some lower and some higher in sugar content. We can see this through the boxplot of sugar content by manufacturer.

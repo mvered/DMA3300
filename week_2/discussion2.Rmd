@@ -117,7 +117,7 @@ life_expectancy %>%
 # **TECHNIQUE 2 FROM THIS WEEK: ggplot histogram*
 life_expectancy %>%
   ggplot(aes(x = Value)) +
-  geom_histogram(binwidth = 5, boundary = 0) +
+  geom_histogram(binwidth = 5, boundary = 0, color = "white") +
   labs(x = "Life Expectancy (in years)",
        y = "Count of Observations",
        title = "Distribution of Life Expectancy Observations")
