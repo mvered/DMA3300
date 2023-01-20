@@ -11,7 +11,7 @@
 
 <meta name="author" content="Michelle Vered" />
 
-<meta name="date" content="2023-01-09" />
+<meta name="date" content="2023-01-19" />
 
 <title>discussion1</title>
 
@@ -1629,7 +1629,7 @@ display: none;
 
 <h1 class="title toc-ignore">discussion1</h1>
 <h4 class="author">Michelle Vered</h4>
-<h4 class="date">2023-01-09</h4>
+<h4 class="date">2023-01-19</h4>
 
 </div>
 
@@ -1637,37 +1637,11 @@ display: none;
 <div id="code" class="section level1">
 <h1>Code</h1>
 <pre class="r"><code># read in data
-shoes &lt;- read.csv(&#39;shoes.csv&#39;, na.strings=c(&#39;&#39;))
-
-# convert date columns to date format
-shoes$dateAdded &lt;- as.POSIXlt(shoes$dateAdded, 
-                              tz = &quot;UTC&quot;, 
-                              tryFormats = c(&quot;%Y-%m-%dT%H:%M:%SZ&quot;), 
-                              optional = FALSE)
-shoes$dateUpdated &lt;- as.POSIXlt(shoes$dateUpdated, 
-                              tz = &quot;UTC&quot;, 
-                              tryFormats = c(&quot;%Y-%m-%dT%H:%M:%SZ&quot;), 
-                              optional = FALSE)
+shoes &lt;- read.csv(&#39;shoes.csv&#39;)
 
 # **TECHNIQUE #1 FROM THE WEEK&#39;S MATERIAL: summarize data**
 summary(shoes)</code></pre>
-<pre><code>##       id              dateAdded                     
-##  Length:10000       Min.   :2015-05-04 12:13:08.00  
-##  Class :character   1st Qu.:2017-11-10 19:32:55.00  
-##  Mode  :character   Median :2017-11-15 02:33:41.00  
-##                     Mean   :2017-10-15 17:25:59.84  
-##                     3rd Qu.:2017-11-17 14:45:41.00  
-##                     Max.   :2018-05-21 13:17:40.00  
-##                                                     
-##   dateUpdated                        asins              brand          
-##  Min.   :2018-01-01 05:51:15.00   Length:10000       Length:10000      
-##  1st Qu.:2018-01-28 14:59:44.00   Class :character   Class :character  
-##  Median :2018-02-01 07:34:05.00   Mode  :character   Mode  :character  
-##  Mean   :2018-02-03 17:07:50.00                                        
-##  3rd Qu.:2018-02-01 07:36:14.00                                        
-##  Max.   :2018-10-23 21:26:11.00                                        
-##                                                                        
-##   categories        primaryCategories     colors           dimension        
+<pre><code>##       id             dateAdded         dateUpdated           asins          
 ##  Length:10000       Length:10000       Length:10000       Length:10000      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
@@ -1675,47 +1649,7 @@ summary(shoes)</code></pre>
 ##                                                                             
 ##                                                                             
 ##                                                                             
-##       ean             imageURLs             keys           manufacturer      
-##  Min.   :3.398e+10   Length:10000       Length:10000       Length:10000      
-##  1st Qu.:7.280e+11   Class :character   Class :character   Class :character  
-##  Median :8.700e+11   Mode  :character   Mode  :character   Mode  :character  
-##  Mean   :7.715e+11                                                           
-##  3rd Qu.:8.860e+11                                                           
-##  Max.   :8.900e+11                                                           
-##  NA&#39;s   :9329                                                                
-##  manufacturerNumber     name           prices.amountMax prices.amountMin
-##  Length:10000       Length:10000       Min.   :  5.87   Min.   :  4.88  
-##  Class :character   Class :character   1st Qu.: 59.99   1st Qu.: 37.49  
-##  Mode  :character   Mode  :character   Median : 64.99   Median : 49.99  
-##                                        Mean   : 69.22   Mean   : 51.13  
-##                                        3rd Qu.: 79.99   3rd Qu.: 59.99  
-##                                        Max.   :359.95   Max.   :359.95  
-##                                                                         
-##  prices.availability prices.color       prices.condition   prices.currency   
-##  Length:10000        Length:10000       Length:10000       Length:10000      
-##  Class :character    Class :character   Class :character   Class :character  
-##  Mode  :character    Mode  :character   Mode  :character   Mode  :character  
-##                                                                              
-##                                                                              
-##                                                                              
-##                                                                              
-##  prices.dateAdded   prices.dateSeen    prices.isSale   prices.merchant   
-##  Length:10000       Length:10000       Mode :logical   Length:10000      
-##  Class :character   Class :character   FALSE:9830      Class :character  
-##  Mode  :character   Mode  :character   TRUE :170       Mode  :character  
-##                                                                          
-##                                                                          
-##                                                                          
-##                                                                          
-##  prices.offer       prices.returnPolicy prices.shipping    prices.size       
-##  Length:10000       Mode:logical        Length:10000       Length:10000      
-##  Class :character   NA&#39;s:10000          Class :character   Class :character  
-##  Mode  :character                       Mode  :character   Mode  :character  
-##                                                                              
-##                                                                              
-##                                                                              
-##                                                                              
-##  prices.sourceURLs     sizes            sourceURLs            upc           
+##     brand            categories        primaryCategories     colors         
 ##  Length:10000       Length:10000       Length:10000       Length:10000      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
@@ -1723,39 +1657,196 @@ summary(shoes)</code></pre>
 ##                                                                             
 ##                                                                             
 ##                                                                             
-##     weight         
-##  Length:10000      
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
-##                    
+##   dimension              ean             imageURLs             keys          
+##  Length:10000       Min.   :3.398e+10   Length:10000       Length:10000      
+##  Class :character   1st Qu.:7.280e+11   Class :character   Class :character  
+##  Mode  :character   Median :8.700e+11   Mode  :character   Mode  :character  
+##                     Mean   :7.715e+11                                        
+##                     3rd Qu.:8.860e+11                                        
+##                     Max.   :8.900e+11                                        
+##                     NA&#39;s   :9329                                             
+##  manufacturer       manufacturerNumber     name           prices.amountMax
+##  Length:10000       Length:10000       Length:10000       Min.   :  5.87  
+##  Class :character   Class :character   Class :character   1st Qu.: 59.99  
+##  Mode  :character   Mode  :character   Mode  :character   Median : 64.99  
+##                                                           Mean   : 69.22  
+##                                                           3rd Qu.: 79.99  
+##                                                           Max.   :359.95  
+##                                                                           
+##  prices.amountMin prices.availability prices.color       prices.condition  
+##  Min.   :  4.88   Length:10000        Length:10000       Length:10000      
+##  1st Qu.: 37.49   Class :character    Class :character   Class :character  
+##  Median : 49.99   Mode  :character    Mode  :character   Mode  :character  
+##  Mean   : 51.13                                                            
+##  3rd Qu.: 59.99                                                            
+##  Max.   :359.95                                                            
+##                                                                            
+##  prices.currency    prices.dateAdded   prices.dateSeen    prices.isSale  
+##  Length:10000       Length:10000       Length:10000       Mode :logical  
+##  Class :character   Class :character   Class :character   FALSE:9830     
+##  Mode  :character   Mode  :character   Mode  :character   TRUE :170      
+##                                                                          
+##                                                                          
+##                                                                          
+##                                                                          
+##  prices.merchant    prices.offer       prices.returnPolicy prices.shipping   
+##  Length:10000       Length:10000       Mode:logical        Length:10000      
+##  Class :character   Class :character   NA&#39;s:10000          Class :character  
+##  Mode  :character   Mode  :character                       Mode  :character  
+##                                                                              
+##                                                                              
+##                                                                              
+##                                                                              
+##  prices.size        prices.sourceURLs     sizes            sourceURLs       
+##  Length:10000       Length:10000       Length:10000       Length:10000      
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##                                                                             
+##      upc               weight         
+##  Length:10000       Length:10000      
+##  Class :character   Class :character  
+##  Mode  :character   Mode  :character  
+##                                       
+##                                       
+##                                       
 ## </code></pre>
 <pre class="r"><code># **TECHNIQUE #2 FROM THE WEEK&#39;S MATERIAL: count up the number of shoes per brand**
 # then save table as a dataframe
-brand_table &lt;- table(shoes$brand) %&gt;%
-  as.data.frame()
-
-# count number of NAs in each column
-sapply(shoes, function(x) sum(is.na(x)))</code></pre>
-<pre><code>##                  id           dateAdded         dateUpdated               asins 
-##                   0                   0                   0                9997 
-##               brand          categories   primaryCategories              colors 
-##                   0                   0                   0                7369 
-##           dimension                 ean           imageURLs                keys 
-##                9883                9329                   0                   0 
-##        manufacturer  manufacturerNumber                name    prices.amountMax 
-##                9473                7518                   0                   0 
-##    prices.amountMin prices.availability        prices.color    prices.condition 
-##                   0                9566                   0                9562 
-##     prices.currency    prices.dateAdded     prices.dateSeen       prices.isSale 
-##                   0                 777                   0                   0 
-##     prices.merchant        prices.offer prices.returnPolicy     prices.shipping 
-##                9565                9879               10000                9588 
-##         prices.size   prices.sourceURLs               sizes          sourceURLs 
-##                   0                   0                   0                   0 
-##                 upc              weight 
-##                 360                9701</code></pre>
+table(shoes$brand)</code></pre>
+<pre><code>## 
+##                     2 lips too                a2 by aerosoles 
+##                             19                            670 
+##                         adidas                         Adidas 
+##                             74                             21 
+##                 Adidas Outdoor                          Altra 
+##                              5                             21 
+##                  andrew geller                         apt. 9 
+##                              3                            183 
+##                      Arc&#39;teryx                          asics 
+##                              3                            111 
+##                          Asics                         Astral 
+##                             19                             10 
+##          betula by birkenstock                    Birkenstock 
+##                              1                              6 
+##                           Bogs                    Brinley Co. 
+##                              1                             37 
+##         Brinley Co. Collection                         Brooks 
+##                             39                             19 
+##                        candies                        Carrini 
+##                            144                              1 
+##                          Chaco                         clarks 
+##                              2                             39 
+##                         corkys                   croft barrow 
+##                              1                            315 
+##                   Daniel Green                    Danskin Now 
+##                              1                              1 
+##                         Dansko             dolce by mojo moxy 
+##                              4                             58 
+##                   Dr. Scholl&#39;s                    dr. scholls 
+##                              1                            337 
+##                   Earth Spirit                       eastland 
+##                              2                             56 
+##                    easy street                    Easy Street 
+##                            556                             29 
+##                    ELLIE SHOES                    Faded Glory 
+##                              1                              4 
+##                   Fergalicious                           fila 
+##                              4                             23 
+##           forever collectibles                  FOREVER YOUNG 
+##                              1                              1 
+##                    Free People                           Frye 
+##                              2                              8 
+##                Genuine Dickies                  henry ferrera 
+##                              1                              2 
+##                        herstar                   Hoka One One 
+##                              2                              7 
+##                    IB Non-Slip                         Inov 8 
+##                              1                             10 
+##                 jennifer lopez             journee collection 
+##                             24                           2182 
+##                        k-swiss                         Kaanas 
+##                             10                              1 
+##                           keds                           Keds 
+##                             21                              1 
+##                           KEEN           kisses by 2 lips too 
+##                              2                             23 
+##              koolaburra by ugg                    La Sportiva 
+##                             18                              8 
+##                         Laredo               lc lauren conrad 
+##                              6                             69 
+##                     lifestride                     Lifestride 
+##                           1457                            136 
+##                           Lowa                           lugz 
+##                              7                              1 
+##                           Lugz                     madden nyc 
+##                              4                             84 
+##                         Mammut                        Merrell 
+##                              2                             13 
+##                            MLB                          Mo Mo 
+##                              1                              3 
+##                       muk luks                       MUK LUKS 
+##                              1                             18 
+##                   Native Shoes                    Naturalizer 
+##                              8                              1 
+##     naturalsoul by naturalizer                    new balance 
+##                            107                            255 
+##                    New Balance                           nike 
+##                             12                            285 
+##                           Nike                           nyla 
+##                            179                              1 
+##                  olivia miller                         Olukai 
+##                              1                             14 
+##                    On Footwear                       OTZShoes 
+##                              2                              1 
+##                           puma                          qupid 
+##                              7                              3 
+##                        rampage                       Red Wing 
+##                             20                              5 
+##                           reef                     Riverberry 
+##                              7                              1 
+##                 rocky 4eursole                           ryka 
+##                             11                            129 
+##                           Ryka                         Salewa 
+##                             18                              1 
+##                        Salomon                        Saucony 
+##                             31                              5 
+##                         Scarpa                        SeaVees 
+##                              4                             26 
+##                         seven7            Seychelles Footwear 
+##                             14                              2 
+##                   Silver Lilly          simply vera vera wang 
+##                              1                            164 
+##                       skechers                       SKECHERS 
+##                            185                            151 
+##                       Sloggers                             so 
+##                              1                            422 
+##                      Soft Ones     soft style by hush puppies 
+##                              1                             25 
+##                       SoftWalk                        Soludos 
+##                              1                              9 
+##          sonoma goods for life               Sperry Top-Sider 
+##                            229                             10 
+##                       Splendid                    spring step 
+##                              7                             79 
+## style charles by charles david                          sugar 
+##                            478                              8 
+##                 The North Face                     Timberland 
+##                              1                              3 
+##                           Toms                  Topo Athletic 
+##                             10                             10 
+##                            UGG                      Unbranded 
+##                              3                              3 
+##                   under armour                   Under Armour 
+##                             11                              3 
+##                       unionbay                Unique Bargains 
+##                             55                              1 
+##                           vans                           Vans 
+##                             24                              6 
+##                    Victoria K. 
+##                              1</code></pre>
 <pre class="r"><code># create new column for difference in price (high price - low price)
 shoes &lt;- shoes %&gt;%
   mutate(prices.diff = prices.amountMax - prices.amountMin)
@@ -1806,237 +1897,33 @@ in 2019 based on data collected from online shopping platforms between
 particular shoe brand, model, and retailer combination.</p>
 <p>Here are some key columns from the data set:</p>
 <ul>
-<li>
-id: A unique id for each observation. No missing values.
-</li>
-<li>
-dateAdded: Date the listing was first added to the data set. No missing
-values. The earliest date is 2015-05-04 and the most recent date is
-2018-05-21. The median date was 2017-11-15.
-</li>
-<li>
-dateUpdated: Date the brand listing was most recently updated. No
+<li><p>id: A unique id for each observation. No missing values.</p></li>
+<li><p>dateAdded: Date the listing was first added to the data set. No
+missing values. The earliest date is 2015-05-04 and the most recent date
+is 2018-05-21. The median date was 2017-11-15.</p></li>
+<li><p>dateUpdated: Date the brand listing was most recently updated. No
 missing values. The earliest date is 2018-01-01 and the most recent date
-is 2018-10-23. The median date was 2018-02-01.
-</li>
-<li>
-brand: A string listing the name of the brand of the shoes. No missing
-values.
-</li>
-<li>
-colors: A string listing the colors available for each pair of shoes.
-Only about a quarter of rows have color information listed. 7,369 rows
-are missing color information.
-</li>
-<li>
-manufacturer: This is the manufacturer of the shoe, if different from
-the brand. Most rows (9,473) have this field empty, indicating the brand
-and manufacturer are the same.
-</li>
-<li>
-name: A string listing the name of the shoe model. No missing values.
-</li>
-<li>
-prices.amountMax: The highest price listed online for this brand and
-model of shoe. No missing data. The the values in this column range from
-5.87 - 359.99, with a mean of 69.22.
-</li>
-<li>
-prices.amountMin: The lowest price listed online for this brand and
-model of shoe. No missing data. The values in this column range from
-4.88 - 359.99, with a mean of 51.13.
-</li>
-<li>
-prices.isSale: This column indicates whether an item was on sale at the
-time its price was recorded. This data is present for all rows in the
-data set.
-</li>
+is 2018-10-23. The median date was 2018-02-01.</p></li>
+<li><p>brand: A string listing the name of the brand of the shoes. No
+missing values.</p></li>
+<li><p>colors: A string listing the colors available for each pair of
+shoes. Only about a quarter of rows have color information listed. 7,369
+rows are missing color information.</p></li>
+<li><p>manufacturer: This is the manufacturer of the shoe, if different
+from the brand. Most rows (9,473) have this field empty, indicating the
+brand and manufacturer are the same.</p></li>
+<li><p>name: A string listing the name of the shoe model. No missing
+values.</p></li>
+<li><p>prices.amountMax: The highest price listed online for this brand
+and model of shoe. No missing data. The the values in this column range
+from 5.87 - 359.99, with a mean of 69.22.</p></li>
+<li><p>prices.amountMin: The lowest price listed online for this brand
+and model of shoe. No missing data. The values in this column range from
+4.88 - 359.99, with a mean of 51.13.</p></li>
+<li><p>prices.isSale: This column indicates whether an item was on sale
+at the time its price was recorded. This data is present for all rows in
+the data set.</p></li>
 </ul>
-<p>The most common brands in this data set are represented in the table
-below, with the frequency being the number of different shoe models of
-each brand.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-Var1
-</th>
-<th style="text-align:right;">
-Freq
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-a2 by aerosoles
-</td>
-<td style="text-align:right;">
-670
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-apt. 9
-</td>
-<td style="text-align:right;">
-183
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-asics
-</td>
-<td style="text-align:right;">
-111
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-candies
-</td>
-<td style="text-align:right;">
-144
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-croft barrow
-</td>
-<td style="text-align:right;">
-315
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dr. scholls
-</td>
-<td style="text-align:right;">
-337
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-easy street
-</td>
-<td style="text-align:right;">
-556
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-journee collection
-</td>
-<td style="text-align:right;">
-2182
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lifestride
-</td>
-<td style="text-align:right;">
-1457
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Lifestride
-</td>
-<td style="text-align:right;">
-136
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-naturalsoul by naturalizer
-</td>
-<td style="text-align:right;">
-107
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new balance
-</td>
-<td style="text-align:right;">
-255
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nike
-</td>
-<td style="text-align:right;">
-285
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Nike
-</td>
-<td style="text-align:right;">
-179
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ryka
-</td>
-<td style="text-align:right;">
-129
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-simply vera vera wang
-</td>
-<td style="text-align:right;">
-164
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-skechers
-</td>
-<td style="text-align:right;">
-185
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SKECHERS
-</td>
-<td style="text-align:right;">
-151
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-so
-</td>
-<td style="text-align:right;">
-422
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sonoma goods for life
-</td>
-<td style="text-align:right;">
-229
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-style charles by charles david
-</td>
-<td style="text-align:right;">
-478
-</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div id="research-question-motivation" class="section level2">
@@ -2057,8 +1944,8 @@ marketplace.</p>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
 <ol style="list-style-type: decimal">
-<li><p>The average low price of women’s shoes is $51.13. The average
-high price of women’s shoes is $69.22.</p></li>
+<li><p>The average low price of women’s shoes is $51.131209. The average
+high price of women’s shoes is $69.223544.</p></li>
 <li><p>The difference between high and low price (for the same pair of
 shoes), varies between no difference all the way to $109.97 difference
 in price. The mean price difference is $18.09 and the median price
