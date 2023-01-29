@@ -1,0 +1,49 @@
+---
+title: "Week 3 Discussion"
+author: "Michelle Vered"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Code & Data Manipulation
+
+```{r setup, include=FALSE}
+
+# set up options & libraries
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Analysis
+
+## Links
+
+Github Link:
+
+Data Source Link:
+
+## Background on Data Set
+
+## Research Question & Motivation
+
+## Data Description & Descriptive Statistics
+
+## Data Analysis & Visualizations
+
+```{r, echo = FALSE}
+
+# visualization of 
+
+```
+
+```{r, echo = FALSE}
+
+# 
+
+```
+
+## Findings
+
+1.  
+2.  
+3.  
