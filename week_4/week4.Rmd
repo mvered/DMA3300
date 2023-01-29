@@ -7,43 +7,89 @@ output: html_document
 
 # Code & Data Manipulation
 
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 
 # set up options & libraries
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+
+# load in data
+# TECHNIQUE #1 from this week: read_csv function
+data <- read_csv('maternal_mortality_ratio_per_100000_live_births.csv')
+
+# reshape data from wide to long format
+# TECHNIQUE #2 from this week: pivot_longer
+data <- data %>%
+  pivot_longer(
+    names_to = "year",
+    values_to = "mortality_rate",
+    cols = -country
+  )
+
+# select a limited list of countries to study in detail
+selected_countries <- data %>%
+  filter(country %in% c("Australia", "Germany", "Japan", "Malaysia", 
+                        "Sweden", "United Kingdom", "United States"))
 ```
 
 # Analysis
 
 ## Links
 
-Github Link:
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_4>
 
-Data Source Link:
+Data Source Link: <https://www.gapminder.org/data/documentation/gd010/>
 
 ## Background on Data Set
 
+This data set includes information on maternal mortality rates for different countries at different points in time. The data was compiled by the Gapminder Foundation in a project led by Claudia Hanson. The data before 1980 comes from various historical sources, depending on the country. Data from 1980 to 2008 comes from the Institute of Health Metrics and Evaluation.
+
 ## Research Question & Motivation
 
-## Data Description & Descriptive Statistics
+We're interested in understanding how maternal mortality rates have improved or otherwise changed over time. How does maternal mortality today compare to mortality rates a century ago? We are also interested in understanding the differences in maternal mortality rates between countries. Have some countries made greater improvements in maternal health than others? From the perspective of policy makers in the healthcare field, understanding where there have been successes and where there is still work to be done in improving maternal mortality is of critical importance.
+
+## Data Description
+
+The data set includes only one type of information, the maternal mortality rate in a given year for a given country, measured as the death rate per 100,000 live births. Recent data (since 1980) is available for a large list of countries around the world. Historical data dating back to 1751 is available for selected countries.
+
+In this analysis we'll focus on a few selected countries, all of which have older historical data available. For this analysis, we'll focus on:
+
+-   Australia (data since 1871)
+
+-   Germany (data since 1952)
+
+-   Japan (data since 1935)
+
+-   Malaysia (data since 1933)
+
+-   Sweden (data since 1751)
+
+-   United Kingdom (data since 1847)
+
+-   United States (data since 1900)
 
 ## Data Analysis & Visualizations
 
-```{r, echo = FALSE}
-
-# visualization of 
-
-```
+From the data visualization, we can see that maternal mortality rates across all countries studied have gone down over time. There is a particularly sharp decline in mortality rates around the 1950s.
 
 ```{r, echo = FALSE}
 
-# 
+# visualization of life expectancy by country, over time
+selected_countries %>%
+  drop_na() %>%
+  ggplot(aes(x = as.numeric(year), y = mortality_rate, color = country)) +
+  geom_line() +
+  labs(x = "Year", 
+       y = "Maternal Mortality Rate (per 100,000 live births)", 
+       color = "Country",
+       title = "Historical Maternal Mortality Rates by Country")
 
 ```
 
 ## Findings
 
-1.  
-2.  
-3.  
+1.  Maternal mortality rates have significantly declined over time for all countries studied, which represent a cross-section of developed countries from around the world.
+
+2.  There was a significant decline in maternal mortality rates particularly around the 1940s-1950s era.
+
+3.  There are some country-to-country differences in maternal mortality - for example Malaysia and the United States have higher mortality rates than other developed countries studied.
