@@ -1,0 +1,13 @@
+---
+title: "Week 3 Discussion"
+author: "Michelle Vered"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Code
+
+```{r}
+
+# first code chunk
+```
