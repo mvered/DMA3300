@@ -1,5 +1,5 @@
 ---
-title: "Week 3 Discussion"
+title: "Week 5 Discussion"
 author: "Michelle Vered"
 date: "`r Sys.Date()`"
 output: html_document
@@ -7,7 +7,139 @@ output: html_document
 
 # Code
 
+```{r, echo = FALSE}
+
+# set up options & libraries
+knitr::opts_chunk$set(echo = FALSE)
+options(scipen=999)
+library(tidyverse)
+
+# read in data 
+data <- read_csv('watson_healthcare_modified.csv')
+
+# select only columns we're going to be working with in this analysis
+data <- data %>%
+  select(Attrition, Department, JobRole, HourlyRate, PerformanceRating) 
+```
+
 ```{r}
 
-# first code chunk
+# summarize data
+data %>%
+  summary()
+
+# recode job role admin as administrative
+data <- data %>%
+  mutate(JobRole = ifelse(JobRole == 'Admin', 'Administrative', JobRole))
+
+# counts by value
+table(data$Attrition)
+table(data$Department)
+table(data$JobRole)
 ```
+
+```{r}
+
+# TECHNIQUE #1: 
+# define a function to estimate annual salary based on hourly wage
+# assume 40 hours per week and 52 weeks per year
+annual_salary <- function(hourly_wage){
+  return(hourly_wage * 40 * 52)
+}
+
+# TECHNIQUE #2:
+# define a function to return annual salary with a 3% raise only for employees with a performance rating of 4 or higher
+annual_salary_adj <- function(hourly_wage, performance_rating){
+  if (performance_rating >=4){
+    salary <- hourly_wage * 1.03 * 40 * 52
+  }
+  else {
+    salary <- hourly_wage * 40 * 52
+  }
+  return(salary)
+}
+
+# apply annual wage and annual wage adjusted function to each row to calculate annual salary for each employee
+data <- data %>%
+  rowwise() %>%
+  mutate(annual_salary = annual_salary(HourlyRate)) %>%
+  mutate(annual_salary_adj = annual_salary_adj(HourlyRate, PerformanceRating))
+
+# calculate total wages paid to all current employees under the annual salary calculation and under the adjusted salary calculation with raises
+current_employees <- data %>%
+  filter(Attrition == "No")
+total_wages <- sum(current_employees$annual_salary)
+total_wages_adj <- sum(current_employees$annual_salary_adj)
+
+```
+
+# Analysis
+
+## Links
+
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_5>
+
+Data Source Link: <https://www.kaggle.com/datasets/jpmiller/employee-attrition-for-healthcare/versions/2?resource=download>
+
+## Background on Data Set
+
+This data set includes information on employees of a hospital system, including their work history, hourly wage rates, job role, job satisfaction, performance rating, whether or not they are a current employee or have left, and more. The data is synthetic data, but based on real information. It comes from an IBM Watson data set. The data set was created and uploaded in 2022.
+
+## Research Question & Motivation
+
+We're interested in understanding how wages differ across job roles, how much the hospital system is paying on average per employee per year, and how much in total the hospital is spending on employee wages per year. We can also simulate a scenario in which employees with high performance ratings are given a 3% raise, and see how much that affects the total spend on wages per year. This is the type of information that the HR department and management at a hospital system would be interested in understanding about its employees.
+
+## Data Description & Descriptive Statistics
+
+The data set includes a long list of columns related to hospital employees. In this analysis, we'll focus on a subset of those columns. The important columns to keep in mind are:
+
+-   **Attrition:** Whether an employee has left the hospital or not ("no" indicates they are a current employee, "yes" indicates they have left). There are 1,477 current employees and 199 who have left in this data set.
+
+-   **Department:** What unit of the hospital the employee is in. There are 531 cardiology employees, 796 in maternity, and 349 in Neurology.
+
+-   **JobRole:** What position the employee holds. After combining the "Admin" and "Administrative" categories, there are:
+
+    -   131 Administrative employees
+
+    -   822 Nurses
+
+    -   189 Therapists
+
+    -   534 Other employees
+
+-   **HourlyRate:** The hourly wage each employee is paid. The average is \$65.47 per hour, with a minimum of \$30 per hour and a maximum of \$100 per hour.
+
+-   **PerformanceRating:** The employee's most recent performance rating. In this data set all employees were rated either 3 or 4, with the average being 3.15.
+
+## Data Analysis & Visualizations
+
+On a per employee basis, the hospital is spending an average of \$`r total_wages/sum(count(current_employees))` per year.
+
+Looking at all current employees, the total amount spent in a year on wages is \$`r format(round(total_wages, 0), big.mark = ",", scientific=FALSE)`. That's assuming all employees work 40 hours per week 52 weeks per year (or work 50 weeks per year with 2 weeks paid time off). If the hospital gave a raise to all employees with a higher performance rating (4 or above), the total amount spent on wages in a year would be \$`r format(round(total_wages_adj,0), big.mark=",", scientific=FALSE)`. That's an increase in total costs of `r round((total_wages_adj - total_wages)/total_wages * 100, 2)` percent.
+
+We can also look at how wages differ across job roles and departments in the hospital. We can see in the attached box plot that wages are relatively similar across departments, with neurology perhaps slightly lower than cardiology and maternity. The second box plot shows that wages are also relatively similar between job roles.
+
+```{r}
+
+current_employees %>%
+  ggplot(aes(x = Department, y = annual_salary)) +
+  geom_boxplot() +
+  labs(x = "Hospital Department",
+       y = "Annual Wages (Est.) in Dollars",
+       title = "Annual Wages by Department")
+
+current_employees %>%
+  ggplot(aes(x = JobRole, y = annual_salary)) +
+  geom_boxplot() +
+  labs(x = "Job Role",
+       y = "Annual Wages (Est.) in Dollars",
+       title = "Annual Wages by Job Role")
+```
+
+## Findings
+
+1.  Raising wages by 3% for employees with a high performance rating would not significantly increase labor costs at the hospital. It would increase estimated annual costs for wages by only `r round((total_wages_adj - total_wages)/total_wages * 100, 2)` percent.
+
+2.  Wages across hospital departments are similar, with neurology perhaps slightly lower than cardiology and maternity. This is shown in the first box plot.
+
+3.  Wages across job roles are very similar, as shown in the second box plot.
