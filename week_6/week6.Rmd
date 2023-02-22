@@ -1,0 +1,57 @@
+---
+title: "Week 6 Discussion"
+author: "Michelle Vered"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Code
+
+Initial set-up:
+
+```{r, echo = FALSE}
+
+# set up options & libraries
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(skimr)
+library(moderndive)
+
+# read in data 
+data <- read_delim('o-ring-erosion-only.txt')
+```
+
+Exploratory Data Analysis
+
+```{r}
+
+data %>%
+  skim()
+```
+
+# Analysis
+
+## Links
+
+Github Link:
+
+Data Source Link: <https://archive.ics.uci.edu/ml/datasets/Challenger+USA+Space+Shuttle+O-Ring>
+
+## Background on Data Set
+
+This data set includes information related to the explosion of the Space Shuttle Challenger on January 28th, 1986. An investigation revealed that the explosion occurred because O-rings used in rocket construction failed on the day of launch. These O-rings were used to seal the joints on the booster rockets. The investigation found that the O-rings were vulnerable to failure when exposed to cold temperatures.
+
+## Research Question & Motivation
+
+## Data Description & Descriptive Statistics
+
+The data set includes information
+
+## Data Analysis & Visualizations
+
+```{r}
+
+
+```
+
+## Findings
