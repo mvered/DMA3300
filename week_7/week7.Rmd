@@ -1,0 +1,54 @@
+---
+title: "Week 7 Discussion"
+author: "Michelle Vered"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Code
+
+```{r, echo = FALSE}
+
+# set up options & libraries
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(skimr)
+library(moderndive)
+library(kableExtra)
+
+# read in data 
+data <- read_csv('')
+```
+
+# Analysis
+
+## Links
+
+Github Link:
+
+Data Source Link:
+
+## Background on Data Set
+
+## Research Question & Motivation
+
+## Data Description & Descriptive Statistics
+
+## Data Analysis & Visualizations
+
+```{r}
+
+# TECHNIQUE #1: 
+
+
+```
+
+```{r}
+
+# TECHNIQUE #2: 
+
+```
+
+## Findings
+
+1.  
