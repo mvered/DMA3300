@@ -14,41 +14,98 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(skimr)
 library(moderndive)
+library(ISLR)
 library(kableExtra)
 
-# read in data 
-data <- read_csv('')
+# read in data from the ISLR packages
+data <- ISLR::Carseats
+
+# summary stats
+data %>%
+  skim()
 ```
 
 # Analysis
 
 ## Links
 
-Github Link:
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_7>
 
-Data Source Link:
+Data Source Link: <https://rdrr.io/cran/ISLR/man/Carseats.html>
 
 ## Background on Data Set
 
+The data set for this analysis includes information on sales of child car seats across 400 different retail stores. The data includes information on total items sold, demographic characteristics of the community where each store was located (such as age and educational attainment), as well as information about each store, such as the stores' advertising budgets and where the car seats were shelved in each store.
+
+This data set is made up of simulated data, but based on real-world information. The data set was compiled as part of the ISLR package for R, for which several data sets were created to help students learn R. The package was originally used for the book "An Introduction to Statistical Learning with Applications in R". The data sets for this package were compiled by Gareth James, Daniela Witten, Trevor Hastie and Rob Tibshirani in 2021.
+
 ## Research Question & Motivation
+
+We want to understand how various store & community attributes affect the total sales of child car seats. In particular, since we are focused on categorical variables this week, we want to understand how much shelf location affects total sales. Shelf location refers to where in the store the car seats are placed. In this data set, each store's shelf location for car seats is categorized as bad, medium, or good. Based on this categorization, it seems likely that medium placements outperformed bad placements and good placements outperformed medium placements. But how much does this affect sales? Is shelf location a minor or a major determining factor?
+
+We might also be interested in understanding how location of the store affects car seat sales. We have variables indicating whether the store is in an urban or rural location, and whether the store is in the US or not. Do these attributes affect car seat sales as well?
+
+Understanding the factors that impact car seat sales would be of particular interest to sales executives within a company that manufacturers and sells car seats. It might also be useful for stores that stock these products to understand which communities sell more car seats and which sell less so they can plan for the right amount of inventory.
 
 ## Data Description & Descriptive Statistics
 
-## Data Analysis & Visualizations
+The data consists of 400 observations, each representing a different store. The data includes 11 columns, none of which have any missing data. The key columns for the purposes of this analysis are:
+
+-   **Sales:** Total number of car seats sold, in thousands. This ranges from 0 to 16.27, with an average of 7.50.
+
+-   **ShelveLoc:** Shelf placement within the store. There were 96 stores with bad placements, 219 with medium placements, and 85 with good placements.
+
+-   **Urban:** Whether the store was in an urban area or not. There were 282 stores in urban areas and 118 in rural areas.
+
+-   **US:** Whether the store was located in the United States or not. There were 258 stores in the U.S. and 142 outside the U.S.
+
+## Data Analysis
+
+We start with a regression of shelf location on car seat sales. The placement of car seats within each store was rated as either "good", "bad", or "medium" and this information was captured in the ShelveLoc variable. If we fit a regression model using R's default settings, the base case is a "bad" shelving location.
+
+The y-intercept of our model is estimated to be 5.523. Since "bad" is the base case, this means that stores with a bad shelving placement sold on average 5.523 thousand car seats. The coefficient for good shelves is 4.691. In other words, stores with good shelving placements sold on average 4.691 thousand more car seats than stores with bad shelving locations. The coefficient for medium shelves in 1.784. In other words, stores with medium shelving placements sold on average 1.784 thousand more car seats than stores with bad shelving placements.
 
 ```{r}
 
-# TECHNIQUE #1: 
-
-
+# TECHNIQUE #1: regression with a categorical variable
+lm(Sales ~ ShelveLoc, data = data) %>%
+get_regression_table() %>%
+  kable()
 ```
 
+We can also re-run the regression and change the base case to "medium" shelving placements. That gives us the same results as the previous regression, just framing it a different way. Under this model, the y-intercept is 7.307, indicating that for stores that fit into our base case (medium placement), the average store sold 7.307 thousand car seats. Notice that we can get this same result by taking the intercept plus the coefficient for medium shelves from our first regression (5.523 + 1.784 = 7.307).
+
 ```{r}
 
-# TECHNIQUE #2: 
+# TECHNIQUE #2: change base case
+data$ShelveLoc <- factor(data$ShelveLoc) %>%
+                          relevel(ref = 'Medium')
 
+# re-run regression with new base case
+lm(Sales ~ ShelveLoc, data = data) %>%
+get_regression_table() %>%
+  kable()
+```
+
+We can also look at some additional regression models to assess how urban vs. rural stores compare to one another as well as look at performance of US vs. non-US stores. On average, urban stores sold 0.095 thousand (or about 95) fewer car seats than rural stores - a pretty small difference. On average, US-based stores sold 1.044 thousand more car seats than stores outside the US.
+
+```{r}
+
+# regression of urban status on sales
+lm(Sales ~ Urban, data = data) %>%
+get_regression_table() %>%
+  kable()
+
+# regression of US vs. non-US status on sales
+lm(Sales ~ US, data = data) %>%
+get_regression_table() %>%
+  kable()
 ```
 
 ## Findings
 
-1.  
+1.  Where car seats are placed within a store makes a huge difference in how many total car seats are sold. From our regression of shelf placement on sales, we know that stores with a bad shelving placement sold on average 5,523 car seats. Stores with medium shelving placements sold on average 1,784 more car seats than stores with bad shelving placements. Stores with good shelving placements sold on average 4,691 more car seats than stores with bad shelving locations.
+
+2.  Whether a store is in an urban or rural area doesn't make a huge difference in car seat sales. On average, urban stores sold 95 more car seats than stores in rural areas.
+
+3.  Whether a store is in the US or not makes some difference in car seat sales. Stores located in the US generated on average 1,044 more car seat sales than stores outside the US.
