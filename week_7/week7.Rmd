@@ -108,6 +108,6 @@ Next week, we'll be talking more about how to fit regression models with multipl
 
 1.  Where car seats are placed within a store makes a huge difference in how many total car seats are sold. From our regression of shelf placement on sales, we know that stores with a bad shelving placement sold on average 5,523 car seats. Stores with medium shelving placements sold on average 1,784 more car seats than stores with bad shelving placements. Stores with good shelving placements sold on average 4,691 more car seats than stores with bad shelving locations.
 
-2.  Whether a store is in an urban or rural area doesn't make a huge difference in car seat sales. On average, urban stores sold 95 more car seats than stores in rural areas.
+2.  Whether a store is in an urban or rural area doesn't make a huge difference in car seat sales. On average, urban stores sold 95 fewer car seats than stores in rural areas.
 
 3.  Whether a store is in the US or not makes some difference in car seat sales. Stores located in the US generated on average 1,044 more car seat sales than stores outside the US.
