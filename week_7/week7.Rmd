@@ -102,6 +102,8 @@ get_regression_table() %>%
   kable()
 ```
 
+Next week, we'll be talking more about how to fit regression models with multiple explanatory variables, something that would be helpful in the case of this data. Later on in this class, we'll also be diving more into hypothesis testing, uncertainty, confidence intervals, and p-values - all of which help us test and understand whether the coefficients in our regression are meaningfully different from zero.
+
 ## Findings
 
 1.  Where car seats are placed within a store makes a huge difference in how many total car seats are sold. From our regression of shelf placement on sales, we know that stores with a bad shelving placement sold on average 5,523 car seats. Stores with medium shelving placements sold on average 1,784 more car seats than stores with bad shelving placements. Stores with good shelving placements sold on average 4,691 more car seats than stores with bad shelving locations.
