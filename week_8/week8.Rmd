@@ -1,5 +1,5 @@
 ---
-title: "Week 8 Discussion"
+title: "Week 7 Discussion"
 author: "Michelle Vered"
 date: "`r Sys.Date()`"
 output: html_document
@@ -13,12 +13,14 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(skimr)
+library(moderndive)
+library(ISLR)
 library(kableExtra)
 
-# read in data 
-data <- read_csv('parkinsons_updrs.csv')
+# read in data from the ISLR packages
+data <- ISLR::Carseats
 
-# exploratory data analysis
+# summary stats
 data %>%
   skim()
 ```
@@ -27,77 +29,83 @@ data %>%
 
 ## Links
 
-Github Link:
+Github Link: <https://github.com/mvered/DMA3300/tree/main/week_8>
 
-Data Source Link: <https://archive.ics.uci.edu/ml/datasets/Challenger+USA+Space+Shuttle+O-Ring>
+Data Source Link: <https://archive.ics.uci.edu/ml/datasets/Parkinsons+Telemonitoring>
 
 ## Background on Data Set
 
-This data set includes information related to the explosion of the Space Shuttle Challenger on January 28th, 1986. An investigation revealed that the explosion occurred because O-rings used in rocket construction failed on the day of launch. These O-rings were used to seal the joints on the booster rockets. The investigation found that the O-rings were vulnerable to failure when exposed to cold temperatures.
-
-This data set contains information from 23 shuttle flights prior to the Challenger disaster. The data was collected and presented in a paper by David Draper in 1993.[^1] Although none of the previous liftoffs had the type of low temperatures observed with challenger, using a regression line, we can extrapolate how many O-rings would be predicted to be in thermal distress at lower temperatures.
-
-[^1]: Draper,D. (1993). Assessment and propagation of model uncertainty. In Proceedings of the Fourth International Workshop on Artificial Intelligence and Statistics (pp. 497\--509). Ft. Lauderdale, FL: Unpublished.
+This data set includes information on patients with Parkinson's disease. The data was compiled by Athanasios Tsanas and Max Little from the University of Oxford in 2009, drawing on data from 10 different medical centers. Recordings of patients' voices were captured by a biomedical device placed in patients' homes. Voice recordings were then analyzed and attributes of their voice patterns quantified. The goal of the program was to provide data for clinicians to monitor the progression of Parkinson's disease symptoms by tracking changes in their patients' voices over time.
 
 ## Research Question & Motivation
 
-We are interested in understanding how launch temperature affects O-ring performance. We can measure this by comparing launch temperature with the number of O-rings experiencing thermal distress. This question is of critical importance for anyone trying to understand the Challenger disaster or plan for future safety improvements in aerospace and on future NASA projects.
+We want to understand how various store & community attributes affect the total sales of child car seats. In particular, since we are focused on categorical variables this week, we want to understand how much shelf location affects total sales. Shelf location refers to where in the store the car seats are placed. In this data set, each store's shelf location for car seats is categorized as bad, medium, or good. Based on this categorization, it seems likely that medium placements outperformed bad placements and good placements outperformed medium placements. But how much does this affect sales? Is shelf location a minor or a major determining factor?
+
+We might also be interested in understanding how location of the store affects car seat sales. We have variables indicating whether the store is in an urban or rural location, and whether the store is in the US or not. Do these attributes affect car seat sales as well?
+
+Understanding the factors that impact car seat sales would be of particular interest to sales executives within a company that manufacturers and sells car seats. It might also be useful for stores that stock these products to understand which communities sell more car seats and which sell less so they can plan for the right amount of inventory.
 
 ## Data Description & Descriptive Statistics
 
-The data set includes 23 observations, each representing a single Space Shuttle flight during the 1980s (prior to the Challenger explosion). There is no missing data in any of the rows.
+The data consists of 400 observations, each representing a different store. The data includes 11 columns, none of which have any missing data. The key columns for the purposes of this analysis are:
 
-The data set includes the following columns. Note that the original data set does not include column names, so I've named the columns myself based on the description of each column given by the source where I got the data from.
+-   **Sales:** Total number of car seats sold, in thousands. This ranges from 0 to 16.27, with an average of 7.50.
 
--   **O-rings at risk:** Total number of O-rings that each Space Shuttle had, each of which could potentially fail. All shuttle flights in this data set had 6 O-rings.
+-   **ShelveLoc:** Shelf placement within the store. There were 96 stores with bad placements, 219 with medium placements, and 85 with good placements.
 
--   **Number with thermal distress:** The number of O-rings that displayed signs of thermal distress, indicating they could possibly fail. This ranges from 0-2.
+-   **Urban:** Whether the store was in an urban area or not. There were 282 stores in urban areas and 118 in rural areas.
 
--   **Launch temperature:** Temperature at the time of launch, in Fahrenheit. This ranged from 53 to 81 degrees, with an average of 69.57 degrees.
+-   **US:** Whether the store was located in the United States or not. There were 258 stores in the U.S. and 142 outside the U.S.
 
--   **Leak-check pressure:** Pressure, measured in pressure per square inch (PSI), during the leak-check test of the rockets. Pressure ranged from 50 PSI to 200 PSI, with an average of 152.17 PSI.
+## Data Analysis
 
--   **Temporal order of flight:** The order in which the flights were conducted, starting with flight #1 and going until flight #23.
+We start with a regression of shelf location on car seat sales. The placement of car seats within each store was rated as either "good", "bad", or "medium" and this information was captured in the ShelveLoc variable. If we fit a regression model using R's default settings, the base case is a "bad" shelving location.
 
-## Data Analysis & Visualizations
-
-As we can see from a scatter plot comparing launch temperature versus the number of O-rings experiencing thermal distress, it seems like lower temperatures put the O-rings at greater risk of failure. While the Space Shuttle had never been tested previously at lower launch temperatures as it was with the Challenger launch, it should have been clear to engineers that there was a concerning trend. If you extrapolate the regression line to lower temperatures, there are potentially many O-rings at risk of thermal distress and even failure.
+The y-intercept of our model is estimated to be 5.523. Since "bad" is the base case, this means that stores with a bad shelving placement sold on average 5.523 thousand car seats. The coefficient for good shelves is 4.691. In other words, stores with good shelving placements sold on average 4.691 thousand more car seats than stores with bad shelving locations. The coefficient for medium shelves in 1.784. In other words, stores with medium shelving placements sold on average 1.784 thousand more car seats than stores with bad shelving placements.
 
 ```{r}
 
-# TECHNIQUE #1: geom_smooth to plot a regression line
-data %>%
-  ggplot(aes(x = launch_temp, y = num_with_thermal_distress)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  labs(x = "Temperature at Launch (in Fahrenheit)",
-       y = "Number of O-rings Experiencing Thermal Distress",
-       title = "Launch Temperature versus O-Rings Experiencing Distress")
-
+# TECHNIQUE #1: regression with a categorical variable
+lm(Sales ~ ShelveLoc, data = data) %>%
+get_regression_table() %>%
+  kable()
 ```
 
-We can further dive into the relationship between distressed O-rings and launch temperature by running a simple linear regression. The number of thermally distressed O-rings would be our y-variable, our dependent variable. The temperature at launch would be our x-variable, our explanatory variable.[^2]
-
-[^2]: Our y-variable here (number of O-rings experiencing thermal distress) is numeric, but limited in range (the value is either 0, 1, or 2). If this were a real analysis report, we'd use another, more complicated version of regression. Our standard linear regression assumes the y-variable is continuous and approximately normally distributed. In other words, if you made a histogram of the y-variable it should look like a bell curve. But that's not the case with our y-variable here, which is 0 for most rows, then 1 or 2 for a few rows. When we're working with count data (that is, data that can only be positive whole numbers), we would typically use a Poisson or Negative Binomial regression model. There are also versions of Poisson and Negative Binomial regression that are adjusted to account for data where there are more zeros than any other value. These are called Zero-Inflated Poisson or Zero-Inflated Negative Binomial models. We won't cover Poisson, Negative Binomial, or Zero-Inflated models in this class, but you should know that those models exist. The difference between a standard linear regression and the Poisson or Negative Binomial regressions is that the math we use to write out the equation of our regression line is a little bit different. With Poisson, the equation for our regression line would be: log(y) = b_0 + b_1 X. So we're essentially just taking the log of y and using that in our regression instead of y.
+We can also re-run the regression and change the base case to "medium" shelving placements. That gives us the same results as the previous regression, just framing it a different way. Under this model, the y-intercept is 7.307, indicating that for stores that fit into our base case (medium placement), the average store sold 7.307 thousand car seats. Notice that we can get this same result by taking the intercept plus the coefficient for medium shelves from our first regression (5.523 + 1.784 = 7.307).
 
 ```{r}
 
-# TECHNIQUE #2: Simple linear regression with numeric variables
-model <- lm(num_with_thermal_distress ~ launch_temp, data = data)
-get_regression_table(model) %>%
-  kable() # note: the kable function from the kableExtra package nicely formats tables
+# TECHNIQUE #2: change base case
+data$ShelveLoc <- factor(data$ShelveLoc) %>%
+                          relevel(ref = 'Medium')
+
+# re-run regression with new base case
+lm(Sales ~ ShelveLoc, data = data) %>%
+get_regression_table() %>%
+  kable()
 ```
 
-The regression model output says that the y-intercept for our model is 4.302. The coefficient or slope of our launch temperature variable is -0.057. That means that for every 1 degree increase in temperature, there are 0.057 fewer O-rings at risk of thermal distress. Or to put it another way, for every 1 unit *decrease* in temperature, there are 0.057 *more* O-rings at risk of thermal distress.
+We can also look at some additional regression models to assess how urban vs. rural stores compare to one another as well as look at performance of US vs. non-US stores. On average, urban stores sold 0.095 thousand (or about 95) fewer car seats than rural stores - a pretty small difference. On average, US-based stores sold 1.044 thousand more car seats than stores outside the US.
 
-The Space Shuttle Challenger was scheduled to launch with a forecasted temperature of 31 degrees Fahrenheit. Using our regression equation, we can model the number of O-rings predicted to be in thermal distress at that temperature:
+```{r}
 
-$$ \hat{y} = 4.302 - 0.057 * x = 4.302 - 0.057 * 31 = 2.535 $$
+# regression of urban status on sales
+lm(Sales ~ Urban, data = data) %>%
+get_regression_table() %>%
+  kable()
 
-In other words, at a launch temperature of 31 degrees, we would predict that 2.535 out of the 6 total O-rings on Challenger would experience thermal distress. That's pretty risky!
+# regression of US vs. non-US status on sales
+lm(Sales ~ US, data = data) %>%
+get_regression_table() %>%
+  kable()
+```
+
+Next week, we'll be talking more about how to fit regression models with multiple explanatory variables, something that would be helpful in the case of this data. Later on in this class, we'll also be diving more into hypothesis testing, uncertainty, confidence intervals, and p-values - all of which help us test and understand whether the coefficients in our regression are meaningfully different from zero.
 
 ## Findings
 
-1.  There is an inverse relationship between the number of O-rings with thermal distress and the launch temperature. The lower the launch temperature, the more O-rings that experienced thermal distress. We can see this from the scatter plot and the regression line of best fit through this data.
-2.  Based on our regression model, for each 1 degree decrease in launch temperature, the number of O-rings predicted to experience thermal distress increased by 0.057 units.
-3.  On January 28th 1986, the date of the fatal Challenger launch, the temperature was forecasted to be 31 degrees Fahrenheit. Using a linear regression, we can predict that 2.535 out of 6 O-rings would experience thermal distress at that temperature.
+1.  Where car seats are placed within a store makes a huge difference in how many total car seats are sold. From our regression of shelf placement on sales, we know that stores with a bad shelving placement sold on average 5,523 car seats. Stores with medium shelving placements sold on average 1,784 more car seats than stores with bad shelving placements. Stores with good shelving placements sold on average 4,691 more car seats than stores with bad shelving locations.
+
+2.  Whether a store is in an urban or rural area doesn't make a huge difference in car seat sales. On average, urban stores sold 95 fewer car seats than stores in rural areas.
+
+3.  Whether a store is in the US or not makes some difference in car seat sales. Stores located in the US generated on average 1,044 more car seat sales than stores outside the US.
